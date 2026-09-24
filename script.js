@@ -1,9 +1,9 @@
 'use strict';
 const SURPRISE_CONFIG = {
     occasionText: "Happy Birthday! 🎂",
-    partnerName: "salma 💖",
+    partnerName: "Salma 🎉",
     senderName: "Hamza ✍️",
-    message: "On your special day, I just want you to know how much you mean to me. ❤️ You are my happiness, my comfort, and my favorite person in the world. Thank you for filling my life with love, laughter, and beautiful memories. Happy Birthday. 🎂"
+    message: "On your special day, I just want to wish you a wonderful year ahead. 🌟 You bring so much positivity, great energy, and inspiration to everyone around you. Thank you for being an amazing friend. Happy Birthday. 🎂"
 };
 document.addEventListener('DOMContentLoaded', () => {
     const partnerNameEl = document.getElementById('partnerName');
