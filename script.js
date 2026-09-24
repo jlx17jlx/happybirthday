@@ -1,7 +1,7 @@
 'use strict';
 const SURPRISE_CONFIG = {
     occasionText: "Happy Birthday! 🎂",
-    partnerName: "Salma 🎉",
+    partnerName: "Salma 💖",
     senderName: "Hamza ✍️",
     message: "On your special day, I just want to wish you a wonderful year ahead. 🌟 You bring so much positivity, great energy, and inspiration to everyone around you. Thank you for being an amazing friend. Happy Birthday. 🎂"
 };
@@ -17,10 +17,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const skipTypingBtn = document.getElementById('skipTypingBtn');
     const canvas = document.getElementById('balloonCanvas');
     const ctx = canvas.getContext('2d');
-    occasionTextEl.innerText = SURPRISE_CONFIG.occasionText;
-    partnerNameEl.innerText = SURPRISE_CONFIG.partnerName;
-    senderNameEl.innerText = SURPRISE_CONFIG.senderName;
-    customMessageEl.innerText = SURPRISE_CONFIG.message;
+    
+    if (occasionTextEl) occasionTextEl.innerText = SURPRISE_CONFIG.occasionText;
+    if (partnerNameEl) partnerNameEl.innerText = SURPRISE_CONFIG.partnerName;
+    if (senderNameEl) senderNameEl.innerText = SURPRISE_CONFIG.senderName;
+    if (customMessageEl) customMessageEl.innerText = SURPRISE_CONFIG.message;
+
     function initBackground() {
         const particleCount = 20;
         for (let i = 0; i < particleCount; i++) {
@@ -294,8 +296,6 @@ document.addEventListener('DOMContentLoaded', () => {
             animateBalloons();
         }
     }
-
-
     function animateBalloons() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         for (let i = heartSparks.length - 1; i >= 0; i--) {
@@ -506,8 +506,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeOverlayBtn = document.getElementById('closeOverlayBtn');
     const openEnvelopeBtn = document.getElementById('openEnvelopeBtn');
     const popupEnvelope = document.getElementById('popupEnvelope');
-    const lettersContainer = document.getElementById('lettersContainer');
-    let zIndexCounter = 300;
     function openEnvelopeOverlay() {
         envelopeOverlay.classList.remove('hidden');
         envelopeOverlay.offsetHeight;
@@ -548,94 +546,6 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             envelopeOverlay.classList.add('hidden');
         }, 400);
-    });
-    const closeButtons = document.querySelectorAll('.closeLetter');
-    closeButtons.forEach((btn) => {
-        btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const letter = e.target.closest('.draggable-item');
-            if (letter) {
-                letter.style.opacity = '0';
-                letter.style.transform = 'translate(-50%, -50%) scale(0.1) translateY(100px)';
-                playPop();
-                setTimeout(() => {
-                    letter.style.display = 'none';
-                }, 400);
-            }
-        });
-    });
-    const draggableLetters = document.querySelectorAll('.draggable-item');
-    draggableLetters.forEach((item) => {
-        let startX = 0, startY = 0;
-        let initialX = 0, initialY = 0;
-        let isDragging = false;
-        const getTransformValues = (el) => {
-            const style = window.getComputedStyle(el);
-            const matrix = style.transform || style.webkitTransform;
-            if (!matrix || matrix === 'none') {
-                return { x: 0, y: 0, scale: 1, rotate: 0 };
-            }
-            const values = matrix.split('(')[1].split(')')[0].split(',');
-            const a = parseFloat(values[0]);
-            const b = parseFloat(values[1]);
-            const angle = Math.round(Math.atan2(b, a) * (180 / Math.PI));
-            const tx = parseFloat(values[4]) || 0;
-            const ty = parseFloat(values[5]) || 0;
-            return { x: tx, y: ty, rotate: angle };
-        };
-        const dragStart = (e) => {
-            if (e.target.closest('.closeLetter')) return;
-            if (e.type === 'mousedown') {
-                e.preventDefault();
-            }
-            isDragging = true;
-            item.classList.add('dragging');
-            item.style.cursor = 'grabbing';
-            item.style.zIndex = zIndexCounter++;
-            const clientX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
-            const clientY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
-            startX = clientX;
-            startY = clientY;
-            const transform = getTransformValues(item);
-            initialX = transform.x;
-            initialY = transform.y;
-            item.dataset.rotate = transform.rotate;
-            if (e.type === 'mousedown') {
-                document.addEventListener('mousemove', dragMove);
-                document.addEventListener('mouseup', dragEnd);
-            } else if (e.type === 'touchstart') {
-                document.addEventListener('touchmove', dragMove, { passive: false });
-                document.addEventListener('touchend', dragEnd);
-            }
-        };
-        const dragMove = (e) => {
-            if (!isDragging) return;
-            if (e.cancelable) e.preventDefault();
-            const clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
-            const clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
-            const dx = clientX - startX;
-            const dy = clientY - startY;
-            const rot = item.dataset.rotate || 0;
-            item.style.transform = `translate(${initialX + dx}px, ${initialY + dy}px) scale(1.03) rotate(${rot}deg)`;
-        };
-        const dragMoveThrottled = (e) => {
-            requestAnimationFrame(() => dragMove(e));
-        };
-        const dragEnd = () => {
-            isDragging = false;
-            item.classList.remove('dragging');
-            item.style.cursor = 'grab';
-            const transform = getTransformValues(item);
-            const rot = item.dataset.rotate || 0;
-            item.style.transform = `translate(${transform.x}px, ${transform.y}px) scale(1) rotate(${rot}deg)`;
-            document.removeEventListener('mousemove', dragMove);
-            document.removeEventListener('mouseup', dragEnd);
-            document.removeEventListener('touchmove', dragMove);
-            document.removeEventListener('touchend', dragEnd);
-        };
-        item.addEventListener('mousedown', dragStart);
-        item.addEventListener('touchstart', dragStart, { passive: true });
-        item.addEventListener('dragstart', (e) => e.preventDefault());
     });
     initBackground();
 });
